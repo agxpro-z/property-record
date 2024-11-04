@@ -63,6 +63,31 @@ export $(./setOrgEnv.sh Org2 | xargs)
 You will now be able to run the `peer` commands in the context of Org2. If a different command prompt, you can run the same command with Org1 instead.
 The `setOrgEnv` script outputs a series of `<name>=<value>` strings. These can then be fed into the export command for your current shell.
 
+### Initializing the ledger with assets
+```bash
+peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" -C property-channel -n property-cc --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt" -c '{"function":"InitLedger","Args":[]}'
+```
+
+If successful, you should see output similar to the following example:
+```shell
+-> INFO 001 Chaincode invoke successful. result: status:200
+```
+
+### Querying the list of all assets
+```bash
+peer chaincode query -C property-channel -n property-cc -c '{"Args":["GetAllAssets"]}'
+```
+
+If successful, you should see the following output:
+```shell
+[{"AppraisedValue":1500000,"City":"Warangal","ID":"LAND-00123-2024","Owner":"Ravi Kumar","OwnerContact":"9876543210","OwnerId":"OWNER-001","Pin":"506004","Size":500,"State":"Telangana","Type":"Land","docType":"asset"},{"AppraisedValue":2000000,"City":"Warangal","ID":"LAND-00124-2024","Owner":"Anjali Rao","OwnerContact":"9123456780","OwnerId":"OWNER-002","Pin":"506004","Size":750,"State":"Telangana","Type":"Plot","docType":"asset"},{"AppraisedValue":3000000,"City":"Warangal","ID":"LAND-00125-2024","Owner":"Sunil Verma","OwnerContact":"9988776655","OwnerId":"OWNER-003","Pin":"506004","Size":1200,"State":"Telangana","Type":"Agricultural Land","docType":"asset"},{"AppraisedValue":5000000,"City":"Warangal","ID":"LAND-00126-2024","Owner":"Priya Singh","OwnerContact":"9876123456","OwnerId":"OWNER-004","Pin":"506004","Size":2000,"State":"Telangana","Type":"Commercial Property","docType":"asset"},{"AppraisedValue":1800000,"City":"Warangal","ID":"LAND-00127-2024","Owner":"Kiran Choudhary","OwnerContact":"9988773344","OwnerId":"OWNER-005","Pin":"506004","Size":600,"State":"Telangana","Type":"Residential Plot","docType":"asset"}]
+```
+
+### Asset transfer
+```bash
+peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" -C property-channel -n property-cc --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt" -c '{"function":"TransferAsset","Args":["LAND-00129-2024", "Ankit", "OWNER-069", "9988696969", "1200000"]}'
+```
+
 ## Chaincode-as-a-service
 
 To learn more about how to use the improvements to the Chaincode-as-a-service please see this [tutorial](./property-network/../CHAINCODE_AS_A_SERVICE_TUTORIAL.md). It is expected that this will move to augment the tutorial in the [Hyperledger Fabric ReadTheDocs](https://hyperledger-fabric.readthedocs.io/en/release-2.4/cc_service.html)
