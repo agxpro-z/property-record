@@ -33,8 +33,8 @@ export const logLevel = env
  */
 export const port = env
   .get('PORT')
-  .default('3000')
-  .example('3000')
+  .default('5000')
+  .example('5000')
   .asPortNumber();
 
 /**
