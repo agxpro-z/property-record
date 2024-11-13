@@ -31,7 +31,7 @@ export class Asset {
   public State: string = '';
 
   @Property()
-  public City: string = '';
+  public District: string = '';
 
   @Property()
   public Pin: string = '';

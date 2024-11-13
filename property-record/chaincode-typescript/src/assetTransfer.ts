@@ -21,7 +21,7 @@ export class AssetTransferContract extends Contract {
         OwnerId: 'OWNER-001',
         OwnerContact: '9876543210',
         State: 'Telangana',
-        City: 'Warangal',
+        District: 'Warangal',
         Pin: '506004',
         AppraisedValue: 1500000 // Appraised value in INR
       },
@@ -33,7 +33,7 @@ export class AssetTransferContract extends Contract {
         OwnerId: 'OWNER-002',
         OwnerContact: '9123456780',
         State: 'Telangana',
-        City: 'Warangal',
+        District: 'Warangal',
         Pin: '506004',
         AppraisedValue: 2000000
       },
@@ -45,7 +45,7 @@ export class AssetTransferContract extends Contract {
         OwnerId: 'OWNER-003',
         OwnerContact: '9988776655',
         State: 'Telangana',
-        City: 'Warangal',
+        District: 'Warangal',
         Pin: '506004',
         AppraisedValue: 3000000
       },
@@ -57,7 +57,7 @@ export class AssetTransferContract extends Contract {
         OwnerId: 'OWNER-004',
         OwnerContact: '9876123456',
         State: 'Telangana',
-        City: 'Warangal',
+        District: 'Warangal',
         Pin: '506004',
         AppraisedValue: 5000000
       },
@@ -69,7 +69,7 @@ export class AssetTransferContract extends Contract {
         OwnerId: 'OWNER-005',
         OwnerContact: '9988773344',
         State: 'Telangana',
-        City: 'Warangal',
+        District: 'Warangal',
         Pin: '506004',
         AppraisedValue: 1800000
       }
@@ -97,7 +97,7 @@ export class AssetTransferContract extends Contract {
     ownerId: string,
     ownerContact: string,
     state: string,
-    city: string,
+    district: string,
     pin: string,
     appraisedValue: number
   ): Promise<void> {
@@ -114,7 +114,7 @@ export class AssetTransferContract extends Contract {
       OwnerId: ownerId,
       OwnerContact: ownerContact,
       State: state,
-      City: city,
+      District: district,
       Pin: pin,
       AppraisedValue: appraisedValue
     };
@@ -143,7 +143,7 @@ export class AssetTransferContract extends Contract {
     ownerId: string,
     ownerContact: string,
     state: string,
-    city: string,
+    district: string,
     pin: string,
     appraisedValue: number
   ): Promise<void> {
@@ -161,7 +161,7 @@ export class AssetTransferContract extends Contract {
       OwnerId: ownerId,
       OwnerContact: ownerContact,
       State: state,
-      City: city,
+      District: district,
       Pin: pin,
       AppraisedValue: appraisedValue
     };
