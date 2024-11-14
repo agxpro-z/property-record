@@ -20,6 +20,7 @@ PEER0_ORG1_CA=${DIR}/property-network/organizations/peerOrganizations/org1.examp
 PEER0_ORG2_CA=${DIR}/property-network/organizations/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem
 PEER0_ORG3_CA=${DIR}/property-network/organizations/peerOrganizations/org3.example.com/tlsca/tlsca.org3.example.com-cert.pem
 PEER0_ORG4_CA=${DIR}/property-network/organizations/peerOrganizations/org4.example.com/tlsca/tlsca.org4.example.com-cert.pem
+PEER0_ORG5_CA=${DIR}/property-network/organizations/peerOrganizations/org5.example.com/tlsca/tlsca.org5.example.com-cert.pem
 
 
 if [[ ${ORG,,} == "org1" || ${ORG,,} == "digibank" ]]; then
@@ -53,6 +54,7 @@ echo "PEER0_ORG1_CA=${PEER0_ORG1_CA}"
 echo "PEER0_ORG2_CA=${PEER0_ORG2_CA}"
 echo "PEER0_ORG3_CA=${PEER0_ORG3_CA}"
 echo "PEER0_ORG4_CA=${PEER0_ORG4_CA}"
+echo "PEER0_ORG5_CA=${PEER0_ORG5_CA}"
 
 echo "CORE_PEER_MSPCONFIGPATH=${CORE_PEER_MSPCONFIGPATH}"
 echo "CORE_PEER_ADDRESS=${CORE_PEER_ADDRESS}"

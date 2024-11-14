@@ -10,18 +10,18 @@ networks:
     name: fabric_test
 
 services:
-  ca_org4:
+  ca_org5:
     image: hyperledger/fabric-ca:latest
     labels:
       service: hyperledger-fabric
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca-org4
+      - FABRIC_CA_SERVER_CA_NAME=ca-org5
       - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_PORT=12054
+      - FABRIC_CA_SERVER_PORT=13054
     ports:
-      - "12054:12054"
+      - "13054:13054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ../fabric-ca/org4:/etc/hyperledger/fabric-ca-server
-    container_name: ca_org4
+      - ../fabric-ca/org5:/etc/hyperledger/fabric-ca-server
+    container_name: ca_org5
