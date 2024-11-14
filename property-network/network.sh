@@ -96,7 +96,7 @@ function checkPrereqs() {
 
   ## check for cfssl binaries
   if [ "$CRYPTO" == "cfssl" ]; then
-  
+
     cfssl version > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
       errorln "cfssl binary not found.."
@@ -213,11 +213,11 @@ function createOrgs() {
     peer_cert admin Admin@org2.example.com org2
 
     infoln "Creating Orderer Org Identities"
-    #function_name cert-type   CN   
+    #function_name cert-type   CN
     orderer_cert orderer orderer.example.com
     orderer_cert admin Admin@example.com
 
-  fi 
+  fi
 
   # Create crypto material using Fabric CA
   if [ "$CRYPTO" == "Certificate Authorities" ]; then
@@ -386,7 +386,7 @@ function listChaincode() {
 
 }
 
-## Call the script to invoke 
+## Call the script to invoke
 function invokeChaincode() {
 
   export FABRIC_CFG_PATH=${PWD}/../config
@@ -400,11 +400,11 @@ function invokeChaincode() {
 
 }
 
-## Call the script to query chaincode 
+## Call the script to query chaincode
 function queryChaincode() {
 
   export FABRIC_CFG_PATH=${PWD}/../config
-  
+
   . scripts/envVar.sh
   . scripts/ccutils.sh
 
@@ -430,10 +430,18 @@ function networkDown() {
   COMPOSE_ORG3_CA_FILES="-f addOrg3/compose/${COMPOSE_FILE_ORG3_CA} -f addOrg3/compose/${CONTAINER_CLI}/${CONTAINER_CLI}-${COMPOSE_FILE_ORG3_CA}"
   COMPOSE_ORG3_FILES="${COMPOSE_ORG3_BASE_FILES} ${COMPOSE_ORG3_COUCH_FILES} ${COMPOSE_ORG3_CA_FILES}"
 
+  # stop org4 containers also in addition to org1 and org2, in case we were running sample to add org4
+  COMPOSE_ORG4_BASE_FILES="-f addOrg4/compose/${COMPOSE_FILE_ORG4_BASE} -f addOrg4/compose/${CONTAINER_CLI}/${CONTAINER_CLI}-${COMPOSE_FILE_ORG4_BASE}"
+  COMPOSE_ORG4_COUCH_FILES="-f addOrg4/compose/${COMPOSE_FILE_ORG4_COUCH} -f addOrg4/compose/${CONTAINER_CLI}/${CONTAINER_CLI}-${COMPOSE_FILE_ORG4_COUCH}"
+  COMPOSE_ORG4_CA_FILES="-f addOrg4/compose/${COMPOSE_FILE_ORG4_CA} -f addOrg4/compose/${CONTAINER_CLI}/${CONTAINER_CLI}-${COMPOSE_FILE_ORG4_CA}"
+  COMPOSE_ORG4_FILES="${COMPOSE_ORG4_BASE_FILES} ${COMPOSE_ORG4_COUCH_FILES} ${COMPOSE_ORG4_CA_FILES}"
+
   if [ "${CONTAINER_CLI}" == "docker" ]; then
     DOCKER_SOCK=$DOCKER_SOCK ${CONTAINER_CLI_COMPOSE} ${COMPOSE_FILES} ${COMPOSE_ORG3_FILES} down --volumes --remove-orphans
+    DOCKER_SOCK=$DOCKER_SOCK ${CONTAINER_CLI_COMPOSE} ${COMPOSE_FILES} ${COMPOSE_ORG4_FILES} down --volumes --remove-orphans
   elif [ "${CONTAINER_CLI}" == "podman" ]; then
     ${CONTAINER_CLI_COMPOSE} ${COMPOSE_FILES} ${COMPOSE_ORG3_FILES} down --volumes
+    ${CONTAINER_CLI_COMPOSE} ${COMPOSE_FILES} ${COMPOSE_ORG4_FILES} down --volumes
   else
     fatalln "Container CLI  ${CONTAINER_CLI} not supported"
   fi
@@ -455,6 +463,7 @@ function networkDown() {
     ${CONTAINER_CLI} run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/org2/msp organizations/fabric-ca/org2/tls-cert.pem organizations/fabric-ca/org2/ca-cert.pem organizations/fabric-ca/org2/IssuerPublicKey organizations/fabric-ca/org2/IssuerRevocationPublicKey organizations/fabric-ca/org2/fabric-ca-server.db'
     ${CONTAINER_CLI} run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/ordererOrg/msp organizations/fabric-ca/ordererOrg/tls-cert.pem organizations/fabric-ca/ordererOrg/ca-cert.pem organizations/fabric-ca/ordererOrg/IssuerPublicKey organizations/fabric-ca/ordererOrg/IssuerRevocationPublicKey organizations/fabric-ca/ordererOrg/fabric-ca-server.db'
     ${CONTAINER_CLI} run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf addOrg3/fabric-ca/org3/msp addOrg3/fabric-ca/org3/tls-cert.pem addOrg3/fabric-ca/org3/ca-cert.pem addOrg3/fabric-ca/org3/IssuerPublicKey addOrg3/fabric-ca/org3/IssuerRevocationPublicKey addOrg3/fabric-ca/org3/fabric-ca-server.db'
+    ${CONTAINER_CLI} run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf addOrg4/fabric-ca/org4/msp addOrg4/fabric-ca/org4/tls-cert.pem addOrg4/fabric-ca/org4/ca-cert.pem addOrg4/fabric-ca/org4/IssuerPublicKey addOrg4/fabric-ca/org4/IssuerRevocationPublicKey addOrg4/fabric-ca/org4/fabric-ca-server.db'
     # remove channel and script artifacts
     ${CONTAINER_CLI} run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf channel-artifacts log.txt *.tar.gz'
   fi
@@ -474,9 +483,16 @@ COMPOSE_FILE_ORG3_BASE=compose-org3.yaml
 COMPOSE_FILE_ORG3_COUCH=compose-couch-org3.yaml
 # certificate authorities compose file
 COMPOSE_FILE_ORG3_CA=compose-ca-org3.yaml
+# use this as the default docker-compose yaml definition for org4
+COMPOSE_FILE_ORG4_BASE=compose-org4.yaml
+# use this as the docker compose couch file for org4
+COMPOSE_FILE_ORG4_COUCH=compose-couch-org4.yaml
+# certificate authorities compose file
+COMPOSE_FILE_ORG4_CA=compose-ca-org4.yaml
 #
 
 # Get docker sock path from environment variable
+SOCK="${DOCKER_HOST:-/var/run/docker.sock}"iable
 SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
 DOCKER_SOCK="${SOCK##unix://}"
 
@@ -609,7 +625,7 @@ while [[ $# -ge 1 ]] ; do
   -ccqc )
     CC_QUERY_CONSTRUCTOR="$2"
     shift
-    ;;    
+    ;;
   * )
     errorln "Unknown flag: $key"
     printHelp
