@@ -478,6 +478,20 @@ function networkDown() {
   fi
 }
 
+# Add org3, org4 and org5 to the network
+function addOrgs() {
+  ORIGINAL_DIR=$PWD
+  cd addOrg3
+  ./addOrg3.sh up
+  cd $ORIGINAL_DIR
+  cd addOrg4
+  ./addOrg4.sh up
+  cd $ORIGINAL_DIR
+  cd addOrg5
+  ./addOrg5.sh up
+  cd $ORIGINAL_DIR
+}
+
 . ./network.config
 
 # use this as the default docker-compose yaml definition
@@ -685,6 +699,9 @@ elif [ "$MODE" == "restart" ]; then
   infoln "Restarting network"
   networkDown
   networkUp
+elif [ "$MODE" == "addOrgs" ]; then
+  infoln "Adding org3, org4 and org5 to the network"
+  addOrgs
 elif [ "$MODE" == "deployCC" ]; then
   infoln "deploying chaincode on channel '${CHANNEL_NAME}'"
   deployCC
