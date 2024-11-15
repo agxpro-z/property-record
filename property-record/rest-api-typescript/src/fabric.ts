@@ -12,46 +12,211 @@ import {
   Transaction,
   Wallet,
   Wallets,
+  X509Identity,
 } from 'fabric-network';
 import * as protos from 'fabric-protos';
 import Long from '../node_modules/long';
 import * as config from './config';
 import { handleError } from './errors';
 import { logger } from './logger';
+import path from 'path';
+import fs from 'fs';
+import FabricCAServices from 'fabric-ca-client';
+import { Application } from 'express';
 
 /**
- * Creates an in memory wallet to hold credentials for an Org1 and Org2 user
+ * Creates a file system wallet to hold credentials for an Org1, Org2, Org3
+ * Org4 and Org5 admin
  *
- * In this sample there is a single user for each MSP ID to demonstrate how
+ * In this sample there is a single admin for each MSP ID to demonstrate how
  * a client app might submit transactions for different users
  *
  * Alternatively a REST server could use its own identity for all transactions,
  * or it could use credentials supplied in the REST requests
  */
-export const createWallet = async (): Promise<Wallet> => {
-  const wallet = await Wallets.newInMemoryWallet();
+export const createWallet = async (app: Application): Promise<Wallet> => {
+  const walletPath = path.join(process.cwd(), 'wallet');
+  const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-  const org1Identity = {
-    credentials: {
-      certificate: config.certificateOrg1,
-      privateKey: config.privateKeyOrg1,
-    },
-    mspId: config.mspIdOrg1,
-    type: 'X.509',
-  };
+  // Org1
+  try {
+    // Load the network configuration
+    const ccpPath = path.resolve(__dirname, '..', '..', '..', 'property-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+    const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+    app.locals['Org1CCP'] = ccp;
 
-  await wallet.put(config.mspIdOrg1, org1Identity);
+    // Create a new CA client for interacting with the CA.
+    const caInfo = ccp.certificateAuthorities['ca.org1.example.com'];
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: true }, caInfo.caName);
 
-  const org2Identity = {
-    credentials: {
-      certificate: config.certificateOrg2,
-      privateKey: config.privateKeyOrg2,
-    },
-    mspId: config.mspIdOrg2,
-    type: 'X.509',
-  };
+    // Check to see if we've already enrolled the admin user.
+    const identity = await wallet.get(config.mspIdOrg1);
+    if (identity) {
+      throw new Error(`An identity for the admin user "${config.mspIdOrg1}" already exists in the wallet`);
+    }
 
-  await wallet.put(config.mspIdOrg2, org2Identity);
+    console.log(`Enrolling admin user "${config.mspIdOrg1}"`);
+
+    // Enroll the admin user, and import the new identity into the wallet.
+    const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
+    const x509Identity: X509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: config.mspIdOrg1,
+      type: 'X.509',
+    };
+    await wallet.put(config.mspIdOrg1, x509Identity);
+    console.log(`Successfully enrolled admin user "${config.mspIdOrg1}" and imported it into the wallet`);
+  } catch (error) {
+    console.error(`Failed to enroll admin user "${config.mspIdOrg1}": ${error}`);
+  }
+
+  // Org2
+  try {
+    // Load the network configuration
+    const ccpPath = path.resolve(__dirname, '..', '..', '..', 'property-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json');
+    const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+    app.locals['Org2CCP'] = ccp;
+
+    // Create a new CA client for interacting with the CA.
+    const caInfo = ccp.certificateAuthorities['ca.org2.example.com'];
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: true }, caInfo.caName);
+
+    // Check to see if we've already enrolled the admin user.
+    const identity = await wallet.get(config.mspIdOrg2);
+    if (identity) {
+      throw new Error(`An identity for the admin user "${config.mspIdOrg2}" already exists in the wallet`);
+    }
+
+    console.log(`Enrolling admin user "${config.mspIdOrg2}"`);
+
+    // Enroll the admin user, and import the new identity into the wallet.
+    const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
+    const x509Identity: X509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: config.mspIdOrg2,
+      type: 'X.509',
+    };
+    await wallet.put(config.mspIdOrg2, x509Identity);
+    console.log(`Successfully enrolled admin user "${config.mspIdOrg2}" and imported it into the wallet`);
+  } catch (error) {
+    console.error(`Failed to enroll admin user "${config.mspIdOrg2}": ${error}`);
+  }
+
+  // Org3
+  try {
+    // Load the network configuration
+    const ccpPath = path.resolve(__dirname, '..', '..', '..', 'property-network', 'organizations', 'peerOrganizations', 'org3.example.com', 'connection-org3.json');
+    const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+    app.locals['Org3CCP'] = ccp;
+
+    // Create a new CA client for interacting with the CA.
+    const caInfo = ccp.certificateAuthorities['ca.org3.example.com'];
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: true }, caInfo.caName);
+
+    // Check to see if we've already enrolled the admin user.
+    const identity = await wallet.get(config.mspIdOrg3);
+    if (identity) {
+      throw new Error(`An identity for the admin user "${config.mspIdOrg3}" already exists in the wallet`);
+    }
+
+    console.log(`Enrolling admin user "${config.mspIdOrg3}"`);
+
+    // Enroll the admin user, and import the new identity into the wallet.
+    const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
+    const x509Identity: X509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: config.mspIdOrg3,
+      type: 'X.509',
+    };
+    await wallet.put(config.mspIdOrg3, x509Identity);
+    console.log(`Successfully enrolled admin user "${config.mspIdOrg3}" and imported it into the wallet`);
+  } catch (error) {
+    console.error(`Failed to enroll admin user "${config.mspIdOrg3}": ${error}`);
+  }
+
+  // Org4
+  try {
+    // Load the network configuration
+    const ccpPath = path.resolve(__dirname, '..', '..', '..', 'property-network', 'organizations', 'peerOrganizations', 'org4.example.com', 'connection-org4.json');
+    const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+    app.locals['Org4CCP'] = ccp;
+
+    // Create a new CA client for interacting with the CA.
+    const caInfo = ccp.certificateAuthorities['ca.org4.example.com'];
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: true }, caInfo.caName);
+
+    // Check to see if we've already enrolled the admin user.
+    const identity = await wallet.get(config.mspIdOrg4);
+    if (identity) {
+      throw new Error(`An identity for the admin user "${config.mspIdOrg4}" already exists in the wallet`);
+    }
+
+    console.log(`Enrolling admin user "${config.mspIdOrg4}"`);
+
+    // Enroll the admin user, and import the new identity into the wallet.
+    const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
+    const x509Identity: X509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: config.mspIdOrg4,
+      type: 'X.509',
+    };
+    await wallet.put(config.mspIdOrg4, x509Identity);
+    console.log(`Successfully enrolled admin user "${config.mspIdOrg4}" and imported it into the wallet`);
+  } catch (error) {
+    console.error(`Failed to enroll admin user "${config.mspIdOrg4}": ${error}`);
+  }
+
+  // Org5
+  try {
+    // Load the network configuration
+    const ccpPath = path.resolve(__dirname, '..', '..', '..', 'property-network', 'organizations', 'peerOrganizations', 'org5.example.com', 'connection-org5.json');
+    const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+    app.locals['Org5CCP'] = ccp;
+
+    // Create a new CA client for interacting with the CA.
+    const caInfo = ccp.certificateAuthorities['ca.org5.example.com'];
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: true }, caInfo.caName);
+
+    // Check to see if we've already enrolled the admin user.
+    const identity = await wallet.get(config.mspIdOrg5);
+    if (identity) {
+      throw new Error(`An identity for the admin user "${config.mspIdOrg5}" already exists in the wallet`);
+    }
+
+    console.log(`Enrolling admin user "${config.mspIdOrg5}"`);
+
+    // Enroll the admin user, and import the new identity into the wallet.
+    const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
+    const x509Identity: X509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: config.mspIdOrg5,
+      type: 'X.509',
+    };
+    await wallet.put(config.mspIdOrg5, x509Identity);
+    console.log(`Successfully enrolled admin user "${config.mspIdOrg5}" and imported it into the wallet`);
+  } catch (error) {
+    console.error(`Failed to enroll admin user "${config.mspIdOrg5}": ${error}`);
+  }
 
   return wallet;
 };

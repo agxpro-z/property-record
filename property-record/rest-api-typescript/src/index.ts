@@ -39,10 +39,12 @@ async function main() {
   const app = await createServer();
 
   logger.info('Connecting to Fabric network with org1 mspid');
-  const wallet = await createWallet();
+  const wallet = await createWallet(app);
+  app.locals.wallet = wallet;
 
+  logger.info('Connecting to Fabric network');
   const gatewayOrg1 = await createGateway(
-    config.connectionProfileOrg1,
+    app.locals['Org1CCP'],
     config.mspIdOrg1,
     wallet
   );
@@ -53,7 +55,7 @@ async function main() {
 
   logger.info('Connecting to Fabric network with org2 mspid');
   const gatewayOrg2 = await createGateway(
-    config.connectionProfileOrg2,
+    app.locals['Org2CCP'],
     config.mspIdOrg2,
     wallet
   );
@@ -61,6 +63,39 @@ async function main() {
   const contractsOrg2 = await getContracts(networkOrg2);
 
   app.locals[config.mspIdOrg2] = contractsOrg2;
+
+  logger.info('Connecting to Fabric network with org3 mspid');
+  const gatewayOrg3 = await createGateway(
+    app.locals['Org3CCP'],
+    config.mspIdOrg3,
+    wallet
+  );
+  const networkOrg3 = await getNetwork(gatewayOrg3);
+  const contractsOrg3 = await getContracts(networkOrg3);
+
+  app.locals[config.mspIdOrg3] = contractsOrg3;
+
+  logger.info('Connecting to Fabric network with org4 mspid');
+  const gatewayOrg4 = await createGateway(
+    app.locals['Org4CCP'],
+    config.mspIdOrg4,
+    wallet
+  );
+  const networkOrg4 = await getNetwork(gatewayOrg4);
+  const contractsOrg4 = await getContracts(networkOrg4);
+
+  app.locals[config.mspIdOrg4] = contractsOrg4;
+
+  logger.info('Connecting to Fabric network with org5 mspid');
+  const gatewayOrg5 = await createGateway(
+    app.locals['Org5CCP'],
+    config.mspIdOrg5,
+    wallet
+  );
+  const networkOrg5 = await getNetwork(gatewayOrg5);
+  const contractsOrg5 = await getContracts(networkOrg5);
+
+  app.locals[config.mspIdOrg5] = contractsOrg5;
 
   logger.info('Initialising submit job queue');
   jobQueue = initJobQueue();

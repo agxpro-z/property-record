@@ -17,6 +17,9 @@ import * as env from 'env-var';
 
 export const ORG1 = 'Org1';
 export const ORG2 = 'Org2';
+export const ORG3 = 'Org3';
+export const ORG4 = 'Org4';
+export const ORG5 = 'Org5';
 
 export const JOB_QUEUE_NAME = 'submit';
 
@@ -131,6 +134,33 @@ export const mspIdOrg2 = env
   .asString();
 
 /**
+ * The Org3 MSP ID
+ */
+export const mspIdOrg3 = env
+  .get('HLF_MSP_ID_ORG3')
+  .default(`${ORG3}MSP`)
+  .example(`${ORG3}MSP`)
+  .asString();
+
+/**
+ * The Org4 MSP ID
+ */
+export const mspIdOrg4 = env
+  .get('HLF_MSP_ID_ORG4')
+  .default(`${ORG4}MSP`)
+  .example(`${ORG4}MSP`)
+  .asString();
+
+/**
+ * The Org5 MSP ID
+ */
+export const mspIdOrg5 = env
+  .get('HLF_MSP_ID_ORG5')
+  .default(`${ORG5}MSP`)
+  .example(`${ORG5}MSP`)
+  .asString();
+
+/**
  * Name of the channel which the basic asset sample chaincode has been installed on
  */
 export const channelName = env
@@ -242,6 +272,105 @@ export const privateKeyOrg2 = env
   .asString();
 
 /**
+ * The Org3 connection profile JSON
+ */
+export const connectionProfileOrg3 = env
+  .get('HLF_CONNECTION_PROFILE_ORG3')
+  .required()
+  .example(
+    '{"name":"test-network-org3","version":"1.0.0","client":{"organization":"Org3" ... }'
+  )
+  .asJsonObject() as Record<string, unknown>;
+
+/**
+ * Certificate for an Org3 identity to evaluate and submit transactions
+ */
+export const certificateOrg3 = env
+  .get('HLF_CERTIFICATE_ORG3')
+  .required()
+  .example(
+    '"-----BEGIN CERTIFICATE-----\\n...\\n-----END CERTIFICATE-----\\n"'
+  )
+  .asString();
+
+/**
+ * Private key for an Org3 identity to evaluate and submit transactions
+ */
+export const privateKeyOrg3 = env
+  .get('HLF_PRIVATE_KEY_ORG3')
+  .required()
+  .example(
+    '"-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"'
+  )
+  .asString();
+
+/**
+ * The Org4 connection profile JSON
+ */
+export const connectionProfileOrg4 = env
+  .get('HLF_CONNECTION_PROFILE_ORG4')
+  .required()
+  .example(
+    '{"name":"test-network-org4","version":"1.0.0","client":{"organization":"Org4" ... }'
+  )
+  .asJsonObject() as Record<string, unknown>;
+
+/**
+ * Certificate for an Org4 identity to evaluate and submit transactions
+ */
+export const certificateOrg4 = env
+  .get('HLF_CERTIFICATE_ORG4')
+  .required()
+  .example(
+    '"-----BEGIN CERTIFICATE-----\\n...\\n-----END CERTIFICATE-----\\n"'
+  )
+  .asString();
+
+/**
+ * Private key for an Org4 identity to evaluate and submit transactions
+ */
+export const privateKeyOrg4 = env
+  .get('HLF_PRIVATE_KEY_ORG4')
+  .required()
+  .example(
+    '"-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"'
+  )
+  .asString();
+
+/**
+ * The Org5 connection profile JSON
+ */
+export const connectionProfileOrg5 = env
+  .get('HLF_CONNECTION_PROFILE_ORG5')
+  .required()
+  .example(
+    '{"name":"test-network-org5","version":"1.0.0","client":{"organization":"Org5" ... }'
+  )
+  .asJsonObject() as Record<string, unknown>;
+
+/**
+ * Certificate for an Org5 identity to evaluate and submit transactions
+ */
+export const certificateOrg5 = env
+  .get('HLF_CERTIFICATE_ORG5')
+  .required()
+  .example(
+    '"-----BEGIN CERTIFICATE-----\\n...\\n-----END CERTIFICATE-----\\n"'
+  )
+  .asString();
+
+/**
+ * Private key for an Org5 identity to evaluate and submit transactions
+ */
+export const privateKeyOrg5 = env
+  .get('HLF_PRIVATE_KEY_ORG5')
+  .required()
+  .example(
+    '"-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"'
+  )
+  .asString();
+
+/**
  * The host the Redis server is running on
  */
 export const redisHost = env
@@ -290,4 +419,32 @@ export const org2ApiKey = env
   .get('ORG2_APIKEY')
   .required()
   .example('456')
+  .asString();
+
+/**
+ * API key for Org3
+ * Specify this API key with the X-Api-Key header to use the Org3 connection profile and credentials
+ */
+export const org3ApiKey = env
+  .get('ORG3_APIKEY')
+  .required()
+  .example('789')
+  .asString();
+
+/**
+ * API key for Org4
+ */
+export const org4ApiKey = env
+  .get('ORG4_APIKEY')
+  .required()
+  .example('101')
+  .asString();
+
+/**
+ * API key for Org5
+ */
+export const org5ApiKey = env
+  .get('ORG5_APIKEY')
+  .required()
+  .example('112')
   .asString();

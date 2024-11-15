@@ -29,6 +29,8 @@ import {
   Wallet,
 } from 'fabric-network';
 
+import { application } from 'express';
+
 import * as fabricProtos from 'fabric-protos';
 
 import { MockProxy, mock } from 'jest-mock-extended';
@@ -53,7 +55,7 @@ jest.mock('ioredis', () => require('ioredis-mock/jest'));
 describe('Fabric', () => {
   describe('createWallet', () => {
     it('creates a wallet containing identities for both orgs', async () => {
-      const wallet = await createWallet();
+      const wallet = await createWallet(application);
 
       expect(await wallet.list()).toStrictEqual(['Org1MSP', 'Org2MSP']);
     });
