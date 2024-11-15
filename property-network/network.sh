@@ -482,13 +482,13 @@ function networkDown() {
 function addOrgs() {
   ORIGINAL_DIR=$PWD
   cd addOrg3
-  ./addOrg3.sh up
+  ./addOrg3.sh up -ca
   cd $ORIGINAL_DIR
   cd addOrg4
-  ./addOrg4.sh up
+  ./addOrg4.sh up -ca
   cd $ORIGINAL_DIR
   cd addOrg5
-  ./addOrg5.sh up
+  ./addOrg5.sh up -ca
   cd $ORIGINAL_DIR
 }
 
