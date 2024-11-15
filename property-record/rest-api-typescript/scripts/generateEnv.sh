@@ -35,6 +35,8 @@ cat << ENV_END > .env
 LOG_LEVEL=info
 
 PORT=5000
+MONGO_URI='mongodb://localhost:27017'
+JWT_SECRET=secret
 
 HLF_CERTIFICATE_ORG1="$(cat ${CERTIFICATE_FILE_ORG1} | sed -e 's/$/\\n/' | tr -d '\r\n')"
 

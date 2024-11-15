@@ -116,6 +116,15 @@ export const asLocalhost = env
   .asBoolStrict();
 
 /**
+ * MongoDB connection string
+ */
+export const mongoUri = env
+  .get('MONGO_URI')
+  .required()
+  .example('mongodb://localhost:27017')
+  .asString();
+
+/**
  * The Org1 MSP ID
  */
 export const mspIdOrg1 = env
