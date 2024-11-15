@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import FabricCAServices from 'fabric-ca-client';
 import { Wallet, X509Identity } from 'fabric-network';
-import * as config from './config';
 import { User } from './models/users';
 import jwt from 'jsonwebtoken';
 
@@ -54,7 +53,13 @@ usersRouter.post('/logout', async (_req: Request, res: Response) => {
 
 // Register a new user
 usersRouter.post('/register', async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password, /* orgName */ } = req.body;
+  const { firstName, lastName, email, password, org }: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    org: string
+  } = req.body;
   const wallet = req.app.locals.wallet as Wallet;
 
   const user = await User.findOne({ email });
@@ -86,7 +91,8 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
         lastName,
         email,
         password: hash,
-        // orgName,
+        orgId: org,
+        mspId: org + 'MSP',
       });
 
       // Save the user in the wallet.
@@ -102,7 +108,7 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
           });
         }
 
-        const adminIdentity = await wallet.get(config.mspIdOrg5);
+        const adminIdentity = await wallet.get(org + "MSP");
         if (!adminIdentity) {
           console.log(
             'An identity for the admin user does not exist in the wallet'
@@ -115,14 +121,14 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
         }
 
         const provider = wallet.getProviderRegistry().getProvider(adminIdentity.type);
-        const adminUser = await provider.getUserContext(adminIdentity, config.mspIdOrg5);
+        const adminUser = await provider.getUserContext(adminIdentity, org + "MSP");
 
-        const caURL = res.app.locals['Org5CCP'].certificateAuthorities['ca.org5.example.com'].url;
+        const caURL = res.app.locals[org + "CCP"].certificateAuthorities[`ca.${org.toLowerCase()}.example.com`].url;
         const ca = new FabricCAServices(caURL);
 
         const secret = await ca.register(
           {
-            affiliation: 'org5.department1',
+            affiliation: `${org.toLowerCase()}.department1`,
             enrollmentID: email,
             enrollmentSecret: hash,
             role: 'client',
@@ -140,7 +146,7 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
             certificate: enrollment.certificate,
             privateKey: enrollment.key.toBytes(),
           },
-          mspId: config.mspIdOrg5,
+          mspId: org + 'MSP',
           type: 'X.509',
         };
 
