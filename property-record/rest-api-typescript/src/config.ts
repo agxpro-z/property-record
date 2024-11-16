@@ -125,6 +125,15 @@ export const mongoUri = env
   .asString();
 
 /**
+ * JWT secret for signing and verifying tokens
+ */
+export const jwtSecret = env
+  .get('JWT_SECRET')
+  .required()
+  .example('secret')
+  .asString();
+
+/**
  * The Org1 MSP ID
  */
 export const mspIdOrg1 = env

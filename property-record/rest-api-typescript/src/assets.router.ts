@@ -27,6 +27,7 @@ import { AssetNotFoundError } from './errors';
 import { evatuateTransaction } from './fabric';
 import { addSubmitTransactionJob } from './jobs';
 import { logger } from './logger';
+import { getUserContract } from './util';
 
 const { ACCEPTED, BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } = StatusCodes;
 
@@ -35,8 +36,8 @@ export const assetsRouter = express.Router();
 assetsRouter.get('/', async (req: Request, res: Response) => {
   logger.debug('Get all assets request received');
   try {
-    const mspId = req.user as string;
-    const contract = req.app.locals[mspId]?.assetContract as Contract;
+    // const mspId = userContract.user as string;
+    const contract = await getUserContract(req.app, req.user as string);
 
     const data = await evatuateTransaction(contract, 'GetAllAssets');
     let assets = [];
@@ -81,14 +82,14 @@ assetsRouter.post(
       });
     }
 
-    const mspId = req.user as string;
+    const userId = req.user as string;
     const assetId = req.body.ID;
 
     try {
       const submitQueue = req.app.locals.jobq as Queue;
       const jobId = await addSubmitTransactionJob(
         submitQueue,
-        mspId,
+        userId,
         'CreateAsset',
         assetId,
         req.body.Type,
@@ -235,14 +236,14 @@ assetsRouter.put(
       });
     }
 
-    const mspId = req.user as string;
+    const userId = req.user as string;
     const assetId = req.params.assetId;
 
     try {
       const submitQueue = req.app.locals.jobq as Queue;
       const jobId = await addSubmitTransactionJob(
         submitQueue,
-        mspId,
+        userId,
         'UpdateAsset',
         assetId,
         req.body.Type,
@@ -306,7 +307,7 @@ assetsRouter.patch(
       });
     }
 
-    const mspId = req.user as string;
+    const userId = req.user as string;
     const assetId = req.params.assetId;
     const newOwner = req.body[0].value;
     const newOwnerId = req.body[0].ownerId;
@@ -317,7 +318,7 @@ assetsRouter.patch(
       const submitQueue = req.app.locals.jobq as Queue;
       const jobId = await addSubmitTransactionJob(
         submitQueue,
-        mspId,
+        userId,
         'TransferAsset',
         assetId,
         newOwner,
@@ -349,14 +350,14 @@ assetsRouter.patch(
 assetsRouter.delete('/:assetId', async (req: Request, res: Response) => {
   logger.debug(req.body, 'Delete asset request received');
 
-  const mspId = req.user as string;
+  const userId = req.user as string;
   const assetId = req.params.assetId;
 
   try {
     const submitQueue = req.app.locals.jobq as Queue;
     const jobId = await addSubmitTransactionJob(
       submitQueue,
-      mspId,
+      userId,
       'DeleteAsset',
       assetId
     );

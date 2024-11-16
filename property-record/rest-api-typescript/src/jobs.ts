@@ -12,9 +12,10 @@ import * as config from './config';
 import { getRetryAction, RetryAction } from './errors';
 import { submitTransaction } from './fabric';
 import { logger } from './logger';
+import { getUserContract } from './util';
 
 export type JobData = {
-  mspid: string;
+  userId: string;
   transactionName: string;
   transactionArgs: string[];
   transactionState?: Buffer;
@@ -115,12 +116,13 @@ export const processSubmitTransactionJob = async (
 ): Promise<JobResult> => {
   logger.debug({ jobId: job.id, jobName: job.name }, 'Processing job');
 
-  const contract = app.locals[job.data.mspid]?.assetContract as Contract;
+  const contract: Contract = await getUserContract(app, job.data.userId);
+
   if (contract === undefined) {
     logger.error(
       { jobId: job.id, jobName: job.name },
       'Contract not found for MSP ID %s',
-      job.data.mspid
+      job.data.userId
     );
 
     // Retrying will never work without a contract, so give up with an
@@ -231,13 +233,13 @@ export const initJobQueueScheduler = (): QueueScheduler => {
  */
 export const addSubmitTransactionJob = async (
   submitQueue: Queue<JobData, JobResult>,
-  mspid: string,
+  userId: string,
   transactionName: string,
   ...transactionArgs: string[]
 ): Promise<string> => {
   const jobName = `submit ${transactionName} transaction`;
   const job = await submitQueue.add(jobName, {
-    mspid,
+    userId,
     transactionName,
     transactionArgs: transactionArgs,
     transactionIds: [],

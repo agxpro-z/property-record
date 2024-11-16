@@ -8,6 +8,7 @@ import { NextFunction, Request, Response } from 'express';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import * as config from './config';
+import jwt from 'jsonwebtoken';
 
 const { UNAUTHORIZED } = StatusCodes;
 
@@ -39,23 +40,38 @@ export const authenticateApiKey = (
 ): void => {
   passport.authenticate(
     'headerapikey',
-    { session: false },
+    { session: true },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (err: any, user: Express.User, _info: any) => {
-      if (err) return next(err);
-      if (!user)
-        return res.status(UNAUTHORIZED).json({
+      if (err)
+        return next(err);
+
+      if (req.cookies.session_token === undefined && !user) {
+        return res.status(401).json({
           status: getReasonPhrase(UNAUTHORIZED),
-          reason: 'NO_VALID_APIKEY',
+          reason: 'NO_SESSION or NO_VALID_APIKEY',
           timestamp: new Date().toISOString(),
         });
-
-      req.logIn(user, { session: false }, async (err) => {
-        if (err) {
-          return next(err);
+      } else if (req.cookies.session_token !== undefined) {
+        try {
+          const data = jwt.verify(req.cookies.session_token, config.jwtSecret);
+          req.user = (data as { email: string; iat: number })['email'];
+        } catch (error) {
+          req.user = undefined;
+          return res.status(401).json({
+            status: getReasonPhrase(UNAUTHORIZED),
+            reason: 'INVALID_SESSION',
+            timestamp: new Date().toISOString(),
+          });
         }
-        return next();
-      });
+      } else {
+        req.logIn(user, { session: false }, async (err) => {
+          if (err) {
+            return next(err);
+          }
+        });
+      }
+      return next();
     }
   )(req, res, next);
 };
