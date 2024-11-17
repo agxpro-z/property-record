@@ -33,7 +33,7 @@ usersRouter.post('/login', async (req: Request, res: Response) => {
         httpOnly: true,
         // secure: process.env.NODE_ENV === 'production',
         // sameSite: 'strict',
-        expires: new Date(Date.now() + 1000 * 60),
+        expires: new Date(Date.now() + 1000 * 60 * 10),
       });
       res.send(user);
     } else {
@@ -167,7 +167,7 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
         httpOnly: true,
         // secure: process.env.NODE_ENV === 'production',
         // sameSite: 'strict',
-        expires: new Date(Date.now() + 1000 * 60),
+        expires: new Date(Date.now() + 1000 * 60 * 10),
       });
 
       res.status(200).json({
