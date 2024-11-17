@@ -72,6 +72,12 @@ export const createServer = async (): Promise<Application> => {
   app.use('/api/jobs', authenticateApiKey, jobsRouter);
   app.use('/api/transactions', authenticateApiKey, transactionsRouter);
   app.use('/api/users', usersRouter);
+  app.get('/api', authenticateApiKey, (_req, res) => {
+    res.status(StatusCodes.OK).json({
+      status: getReasonPhrase(StatusCodes.OK),
+      timestamp: new Date().toISOString(),
+    });
+  });
 
   // For everything else
   app.use((_req, res) =>
