@@ -7,9 +7,9 @@ The property record sample demonstrates:
 - Evaluating smart contract transactions to query ledger state.
 - Handling errors in transaction invocation.
 
-## About the sample
+## About the source code
 
-This sample includes smart contract and application code in multiple languages. This sample shows create, read, update, transfer and delete of an asset.
+This source code includes smart contract and application code. This project shows create, read, update, transfer and delete of an property record.
 
 For a more detailed walk-through of the application code and client API usage, refer to the [Running a Fabric Application tutorial](https://hyperledger-fabric.readthedocs.io/en/latest/write_first_app.html) in the main Hyperledger Fabric documentation.
 
@@ -22,7 +22,7 @@ Follow the execution flow in the client application code, and corresponding outp
 
 ### Smart Contract
 
-The smart contract (in folder `chaincode-xyz`) implements the following functions to support the application:
+The smart contract (in folder `chaincode-typescript`) implements the following functions to support the application:
 
 - CreateAsset
 - ReadAsset
@@ -30,11 +30,11 @@ The smart contract (in folder `chaincode-xyz`) implements the following function
 - DeleteAsset
 - TransferAsset
 
-Note that the asset transfer implemented by the smart contract is a simplified scenario, without ownership validation, meant only to demonstrate how to invoke transactions.
+Note that the property record transfer implemented by the smart contract is a simplified scenario, without ownership validation, meant only to demonstrate how to invoke transactions.
 
-## Running the sample
+## Running the smart contract
 
-The Fabric test network is used to deploy and run this sample. Follow these steps in order:
+The Fabric property network is used to deploy and run this project. Follow these steps in order:
 
 1. Create the test network and a channel (from the `property-network` folder).
 
@@ -42,65 +42,15 @@ The Fabric test network is used to deploy and run this sample. Follow these step
    ./network.sh up createChannel -c property-channel -ca
    ```
 
-1. Deploy one of the smart contract implementations (from the `property-network` folder).
+2. Deploy the smart contract implementations (from the `property-network` folder).
 
-   - To deploy the **TypeScript** chaincode implementation:
-
-     ```shell
-     ./network.sh deployCC -ccn property-cc -ccp ../property-record/chaincode-typescript/ -ccl typescript
-     ```
-
-   - To deploy the **JavaScript** chaincode implementation:
-
-     ```shell
-     ./network.sh deployCC -ccn property-cc -ccp ../property-record/chaincode-javascript/ -ccl javascript
-     ```
-
-   - To deploy the **Go** chaincode implementation:
-
-     ```shell
-     ./network.sh deployCC -ccn property-cc -ccp ../property-record/chaincode-go/ -ccl go
-     ```
-
-   - To deploy the **Java** chaincode implementation:
-     ```shell
-     ./network.sh deployCC -ccn property-cc -ccp ../property-record/chaincode-java/ -ccl java
-     ```
-
-1. Run the application (from the `property-record` folder).
-
-   - To run the **TypeScript** sample application:
-
-     ```shell
-     cd application-gateway-typescript
-     npm install
-     npm start
-     ```
-
-   - To run the **JavaScript** sample application:
-
-     ```shell
-     cd application-gateway-javascript
-     npm install
-     npm start
-     ```
-
-   - To run the **Go** sample application:
-
-     ```shell
-     cd application-gateway-go
-     go run .
-     ```
-
-   - To run the **Java** sample application:
-     ```shell
-     cd application-gateway-java
-     ./gradlew run
-     ```
+   ```shell
+   ./network.sh deployCC -ccn property-cc -ccp ../property-record/chaincode-typescript/
+   ```
 
 ## Clean up
 
-When you are finished, you can bring down the test network (from the `property-network` folder). The command will remove all the nodes of the test network, and delete any ledger data that you created.
+When you are finished, you can bring down the property network (from the `property-network` folder). The command will remove all the nodes of the property network, and delete any ledger data that you created.
 
 ```shell
 ./network.sh down
