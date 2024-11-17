@@ -56,7 +56,10 @@ export const createServer = async (): Promise<Application> => {
   app.use(cookieParser());
 
   if (process.env.NODE_ENV === 'development') {
-    app.use(cors());
+    app.use(cors({
+      origin: process.env.CLIENT_URL!,
+      credentials: true,
+    }));
   }
 
   if (process.env.NODE_ENV === 'test') {

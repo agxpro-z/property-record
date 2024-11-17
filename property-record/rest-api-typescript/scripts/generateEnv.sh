@@ -37,6 +37,8 @@ LOG_LEVEL=info
 PORT=5000
 MONGO_URI='mongodb://localhost:27017'
 JWT_SECRET=secret
+CLIENT_URL=http://localhost:3000
+NODE_ENV=development
 
 HLF_CERTIFICATE_ORG1="$(cat ${CERTIFICATE_FILE_ORG1} | sed -e 's/$/\\n/' | tr -d '\r\n')"
 

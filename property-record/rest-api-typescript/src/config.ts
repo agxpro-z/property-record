@@ -133,6 +133,15 @@ export const jwtSecret = env
   .example('secret')
   .asString();
 
+  /**
+   * Client URL for CORS
+   */
+  export const clientUrl = env
+    .get('CLIENT_URL')
+    .required()
+    .example('http://localhost:3000')
+    .asString();
+
 /**
  * The Org1 MSP ID
  */
