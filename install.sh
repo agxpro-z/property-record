@@ -270,7 +270,7 @@ fi
 
 # Prior to fabric 2.5, use amd64 binaries on darwin-arm64
 if [[ $VERSION =~ ^2\.[0-4]\.* ]]; then
-  PLATFORM=$(echo $PLATFORM | sed 's/darwin-arm64/darwin-amd64/g')
+    PLATFORM=$(echo $PLATFORM | sed 's/darwin-arm64/darwin-amd64/g')
 fi
 
 BINARY_FILE=hyperledger-fabric-${PLATFORM}-${VERSION}.tar.gz
@@ -302,10 +302,11 @@ fi
 
 if [[ "${_arg_comp[@]}" =~ (^| |,)p(odman)? ]]; then
         echo
-        echo "Pull Hyperledger Fabric podman images"
+        # echo "Pull Hyperledger Fabric podman images"
+        echo "Podman is not supported"
         echo
-        CONTAINER_CLI=podman
-        pullImages
+        # CONTAINER_CLI=podman
+        # pullImages
 fi
 
 if [[ "${_arg_comp[@]}" =~ (^| |,)d(ocker)? ]]; then
