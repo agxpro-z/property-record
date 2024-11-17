@@ -14,64 +14,64 @@ export class AssetTransferContract extends Contract {
   public async InitLedger(ctx: Context): Promise<void> {
     const assets: Asset[] = [
       {
-        ID: 'LAND-00123-2024',
-        Type: 'Land',
+        ID: 'LAND-0001-2024',
+        Type: 'Private Property',
         Size: 500, // Size in square meters
-        Owner: 'Ravi Kumar',
+        Owner: 'Alpha',
         OwnerId: 'OWNER-001',
-        OwnerContact: '9876543210',
-        State: 'Telangana',
-        District: 'Warangal',
-        Pin: '506004',
-        AppraisedValue: 1500000 // Appraised value in INR
+        OwnerContact: '9001100100',
+        State: 'Unknown',
+        District: 'Interstellar',
+        Pin: '000000',
+        AppraisedValue: 100000000000 // Appraised value in INR
       },
       {
-        ID: 'LAND-00124-2024',
+        ID: 'LAND-0002-2024',
         Type: 'Plot',
         Size: 750,
-        Owner: 'Anjali Rao',
+        Owner: 'Beta',
         OwnerId: 'OWNER-002',
-        OwnerContact: '9123456780',
+        OwnerContact: '9001100101',
         State: 'Telangana',
         District: 'Warangal',
         Pin: '506004',
-        AppraisedValue: 2000000
+        AppraisedValue: 20000000
       },
       {
-        ID: 'LAND-00125-2024',
+        ID: 'LAND-0003-2024',
         Type: 'Agricultural Land',
         Size: 1200,
-        Owner: 'Sunil Verma',
+        Owner: 'Gamma',
         OwnerId: 'OWNER-003',
-        OwnerContact: '9988776655',
-        State: 'Telangana',
-        District: 'Warangal',
-        Pin: '506004',
-        AppraisedValue: 3000000
+        OwnerContact: '9001100102',
+        State: 'Madhya Pradesh',
+        District: 'Indore',
+        Pin: '452001',
+        AppraisedValue: 30000000
       },
       {
-        ID: 'LAND-00126-2024',
+        ID: 'LAND-0004-2024',
         Type: 'Commercial Property',
         Size: 2000,
-        Owner: 'Priya Singh',
+        Owner: 'Delta',
         OwnerId: 'OWNER-004',
-        OwnerContact: '9876123456',
-        State: 'Telangana',
-        District: 'Warangal',
-        Pin: '506004',
-        AppraisedValue: 5000000
+        OwnerContact: '9001100103',
+        State: 'Uttar Pradesh',
+        District: 'Lucknow',
+        Pin: '226001',
+        AppraisedValue: 50000000
       },
       {
-        ID: 'LAND-00127-2024',
+        ID: 'LAND-0005-2024',
         Type: 'Residential Plot',
         Size: 600,
-        Owner: 'Kiran Choudhary',
+        Owner: 'Epsilon',
         OwnerId: 'OWNER-005',
-        OwnerContact: '9988773344',
+        OwnerContact: '9001100104',
         State: 'Telangana',
-        District: 'Warangal',
-        Pin: '506004',
-        AppraisedValue: 1800000
+        District: 'Hyderabad',
+        Pin: '500001',
+        AppraisedValue: 18000000
       }
     ];
 
