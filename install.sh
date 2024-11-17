@@ -54,7 +54,7 @@ begins_with_short_option()
 print_help()
 {
 	printf 'Usage: %s [-f|--fabric-version <arg>] [-c|--ca-version <arg>] <comp-1> [<comp-2>] ... [<comp-n>] ...\n' "$0"
-	printf '\t%s\n' "<comp> Component to install, one or more of  docker | binary | samples | podman  First letter of component also accepted; If none specified docker | binary | samples is assumed"
+	printf '\t%s\n' "<comp> Component to install, one or more of  docker | binary | source | podman  First letter of component also accepted; If none specified docker | binary | source is assumed"
 	printf '\t%s\n' "-f, --fabric-version: FabricVersion (default: '2.5.9')"
 	printf '\t%s\n' "-c, --ca-version: Fabric CA Version (default: '1.5.12')"
 }
@@ -157,15 +157,15 @@ singleImagePull() {
     done
 }
 
-cloneSamplesRepo() {
-    # clone (if needed) hyperledger/fabric-samples and checkout corresponding
+cloneSourceRepo() {
+    # clone (if needed) agxpro-z/property-record and checkout corresponding
     # version to the binaries and docker images to be downloaded
-    if [ -d test-network ]; then
-        # if we are in the fabric-samples repo, checkout corresponding version
+    if [ -d property-network ]; then
+        # if we are in the property-record repo, checkout corresponding version
         echo "==> Already in property-record repo"
     elif [ -d property-record ]; then
-        # if fabric-samples repo already cloned and in current directory,
-        # cd fabric-samples
+        # if property-record repo already cloned and in current directory,
+        # cd property-record
         echo "===> Changing directory to property-record"
         cd property-record
     else
@@ -180,6 +180,29 @@ cloneSamplesRepo() {
         echo "property-record v${VERSION} does not exist, defaulting to main. property-record main branch is intended to work with recent versions of fabric."
         git checkout -q main
     fi
+
+    # clone (if needed) agxpro-z/property-record-webapp and checkout corresponding
+    ORIGINAL_DIR=$(pwd)
+    cd ..
+    echo ""
+    if [ -d property-record-webapp ]; then
+        # if property-record-webapp repo already cloned and in current directory,
+        # cd property-record-webapp
+        echo "===> Changing directory to property-record-webapp"
+        cd property-record-webapp
+    else
+        echo "===> Cloning agxpro-z/property-record-webapp repo"
+        git clone -b main https://github.com/agxpro-z/property-record-webapp && cd property-record-webapp
+    fi
+
+    if GIT_DIR=.git git rev-parse v${VERSION} >/dev/null 2>&1; then
+        echo "===> Checking out v${VERSION} of agxpro-z/property-record-webapp"
+        git checkout -q v${VERSION}
+    else
+        echo "property-record-webapp v${VERSION} does not exist, defaulting to main. property-record-webapp main branch is intended to work with recent versions of fabric."
+        git checkout -q main
+    fi
+    cd $ORIGINAL_DIR
 }
 
 # This will download the .tar.gz
@@ -290,7 +313,7 @@ if [[ "${_arg_comp[@]}" =~ (^| |,)s(amples)? ]]; then
         echo
         echo "Clone agxpro-z/property-record repo"
         echo
-        cloneSamplesRepo
+        cloneSourceRepo
 fi
 
 if [[ "${_arg_comp[@]}" =~ (^| |,)b(inary)? ]]; then
