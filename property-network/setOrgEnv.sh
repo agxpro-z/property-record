@@ -23,23 +23,44 @@ PEER0_ORG4_CA=${DIR}/property-network/organizations/peerOrganizations/org4.examp
 PEER0_ORG5_CA=${DIR}/property-network/organizations/peerOrganizations/org5.example.com/tlsca/tlsca.org5.example.com-cert.pem
 
 
-if [[ ${ORG,,} == "org1" || ${ORG,,} == "digibank" ]]; then
+if [[ ${ORG,,} == "org1" || ${ORG,,} == "Org1" ]]; then
 
    CORE_PEER_LOCALMSPID=Org1MSP
    CORE_PEER_MSPCONFIGPATH=${DIR}/property-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
    CORE_PEER_ADDRESS=localhost:7051
    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/property-network/organizations/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem
 
-elif [[ ${ORG,,} == "org2" || ${ORG,,} == "magnetocorp" ]]; then
+elif [[ ${ORG,,} == "org2" || ${ORG,,} == "Org2" ]]; then
 
    CORE_PEER_LOCALMSPID=Org2MSP
    CORE_PEER_MSPCONFIGPATH=${DIR}/property-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
    CORE_PEER_ADDRESS=localhost:9051
    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/property-network/organizations/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem
 
+elif [[ ${ORG,,} == "org3" || ${ORG,,} == "Org3" ]]; then
+
+   CORE_PEER_LOCALMSPID=Org3MSP
+   CORE_PEER_MSPCONFIGPATH=${DIR}/property-network/organizations/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+   CORE_PEER_ADDRESS=localhost:11051
+   CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/property-network/organizations/peerOrganizations/org3.example.com/tlsca/tlsca.org3.example.com-cert.pem
+
+elif [[ ${ORG,,} == "org4" || ${ORG,,} == "Org4" ]]; then
+
+   CORE_PEER_LOCALMSPID=Org4MSP
+   CORE_PEER_MSPCONFIGPATH=${DIR}/property-network/organizations/peerOrganizations/org4.example.com/users/Admin@org4.example.com/msp
+   CORE_PEER_ADDRESS=localhost:12051
+   CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/property-network/organizations/peerOrganizations/org4.example.com/tlsca/tlsca.org4.example.com-cert.pem
+
+elif [[ ${ORG,,} == "org5" || ${ORG,,} == "Org5" ]]; then
+
+   CORE_PEER_LOCALMSPID=Org5MSP
+   CORE_PEER_MSPCONFIGPATH=${DIR}/property-network/organizations/peerOrganizations/org5.example.com/users/Admin@org5.example.com/msp
+   CORE_PEER_ADDRESS=localhost:13051
+   CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/property-network/organizations/peerOrganizations/org5.example.com/tlsca/tlsca.org5.example.com-cert.pem
+
 else
-   echo "Unknown \"$ORG\", please choose Org1/Digibank or Org2/Magnetocorp"
-   echo "For example to get the environment variables to set upa Org2 shell environment run:  ./setOrgEnv.sh Org2"
+   echo "Unknown \"$ORG\", please choose Org1, Org2, Org3, Org4 or Org5"
+   echo "For example to get the environment variables to set up a Org2 shell environment run:  ./setOrgEnv.sh Org2"
    echo
    echo "This can be automated to set them as well with:"
    echo
